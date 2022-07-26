@@ -10,8 +10,8 @@ abstract public class MemoryDbRepositoryAbstract<T extends MemoryDbEntity> imple
     private int index = 0;
 
     @Override
-    public Optional findById(int index) {
-        db.stream().filter(it -> it.getIndex() == index).findFirst();
+    public Optional<T> findById(int index) {
+        return db.stream().filter(it -> it.getIndex() == index).findFirst();
     }
 
     @Override
@@ -19,17 +19,18 @@ abstract public class MemoryDbRepositoryAbstract<T extends MemoryDbEntity> imple
         var optionalEntity = db.stream().filter(it -> it.getIndex() == entity.getIndex()).findFirst();
 
         if(optionalEntity.isEmpty()){
-            // db에 이미 데이터가 있는 경우
+            // db 에 데이터가 없는 경우
             index++;
             entity.setIndex(index);
             db.add(entity);
             return entity;
-        }else {
-            // db에 데이터가 없는 경우
-            var preIndex = optionalEntity.get().getIndex();
 
+        }else{
+            // db 에 이미 데이터가 있는 경우
+            var preIndex = optionalEntity.get().getIndex();
             entity.setIndex(preIndex);
-            deleteById((preIndex));
+
+            deleteById(preIndex);
             db.add(entity);
             return entity;
         }
@@ -37,14 +38,14 @@ abstract public class MemoryDbRepositoryAbstract<T extends MemoryDbEntity> imple
 
     @Override
     public void deleteById(int index) {
-        var optionalEntity = db.stream().filter(it ->it.getIndex() == index).findFirst();
-        if (optionalEntity.isPresent()) {
+        var optionalEntity = db.stream().filter(it -> it.getIndex() == index).findFirst();
+        if(optionalEntity.isPresent()){
             db.remove(optionalEntity.get());
         }
     }
 
     @Override
-    public List<T> listAll() {
+    public List<T> findAll() {
         return db;
     }
 }
