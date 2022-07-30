@@ -23,7 +23,7 @@ public class GetController {
         return id+pwd;
     }
 
-    // localhost:8080/api/multiParameter?account=abcd&email=study@gmail.com&page=10
+    // localhost:8080/api/getmultiParameter?account=abcd&email=study@gmail.com&page=10
     @GetMapping("/getMultiParameter")
     public SearchParam getMultiParameter(SearchParam searchParam){
         System.out.println(searchParam.getAccount());
